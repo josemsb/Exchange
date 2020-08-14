@@ -49,9 +49,15 @@ class UIExchange constructor(context: Context?, attributes: AttributeSet?) :
     }
 
     private fun initListener() {
-        btnSend.setOnClickListener { selectedCountry("from") }
+        btnSend.setOnLongClickListener {
+            selectedCountry("from")
+            true
+        }
 
-        btnGo.setOnClickListener { selectedCountry("to") }
+        btnGo.setOnLongClickListener {
+            selectedCountry("to")
+            true
+        }
 
         txtAmountFrom.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable) {}

@@ -44,7 +44,8 @@
                     android:maxLines="1"
                     android:textColor="#888B90"
                     android:textCursorDrawable="@drawable/cs_cursor"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+                    android:maxLength="9"/>
 
             </LinearLayout>
 
@@ -96,7 +97,8 @@
                     android:maxLines="1"
                     android:textColor="#888B90"
                     android:textCursorDrawable="@drawable/cs_cursor"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+                    android:maxLength="9"/>
 
 
             </LinearLayout>
