@@ -128,6 +128,10 @@ class UIExchange constructor(context: Context?, attributes: AttributeSet?) :
                 if (it.money == exchangeCurrencyFrom) {
                     btnSend.text = it.country
                     txtFrom.text = context.resources.getString(R.string.toSend).plus(it.money)
+                    txtSummary.text =
+                        context.resources.getString(R.string.sale).plus(it.purchase.toString())
+                            .plus(" | venta: ")
+                            .plus(it.sale.toString())
                 }
 
                 if (it.money == exchangeCurrencyTo) {
@@ -225,10 +229,7 @@ class UIExchange constructor(context: Context?, attributes: AttributeSet?) :
                 txtTo.text = context.resources.getString(R.string.toGo).plus(it.money)
                 btnGo.text = it.country
             }
-
-
         }
-
     }
 
     //Save data
