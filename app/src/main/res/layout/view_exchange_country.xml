@@ -15,8 +15,8 @@
 
         <ImageView
             android:id="@+id/imgCountry"
-            android:layout_width="100dp"
-            android:layout_height="50dp"
+            android:layout_width="@dimen/dp_100"
+            android:layout_height="@dimen/dp_50"
             android:contentDescription="@string/contentDescription">
 
         </ImageView>
@@ -46,7 +46,7 @@
             <View
                 android:layout_width="wrap_content"
                 android:layout_height="2dp"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="@dimen/dp_10"
                 android:background="@color/gray">
 
             </View>

@@ -32,7 +32,7 @@ class SelectedCountryAdapter(private val countries: List<Country>) :
 
     override fun onBindViewHolder(holder: SelectedCountryAdapterViewHolder, position: Int) {
         val country: Country = countries[position]
-        holder.bind(country,context as Context)
+        holder.bind(country, context as Context)
 
         holder.itemView.setOnClickListener {
             mOnClickItem?.onClickItem(country)
@@ -53,7 +53,11 @@ class SelectedCountryAdapter(private val countries: List<Country>) :
             txtExchange.text =
                 "1 SOL = ".plus(country.valor.toString()).plus(" ").plus(country.money)
             val resourceId: Int =
-                context.applicationContext.resources.getIdentifier(country.image, "drawable", context.applicationContext.packageName)
+                context.applicationContext.resources.getIdentifier(
+                    country.image,
+                    "drawable",
+                    context.applicationContext.packageName
+                )
             imgCountry.setImageResource(resourceId)
 
         }

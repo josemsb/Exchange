@@ -13,4 +13,7 @@
     <string name="message_process02">Confirma si deseas continuar la operacion</string>
     <string name="country">Pais</string>
     <string name="summary">1 SOL = 1.00 EUR</string>
+    <string name="toSend">Tu envias\u0020</string>
+    <string name="toGo">Tu recibes\u0020</string>
+    <string name="sale">Compra:\u0020</string>
 </resources>

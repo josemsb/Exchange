@@ -25,10 +25,7 @@ class ExchangeActivity : ActivityResultObservableActivity() {
         initListener()
     }
 
-    private fun initListener() {
-        btnProccess.setOnClickListener { exchangeViewModel.proccess(uiExchange.mountExchange, uiExchange.resultReference, uiExchange.exchangeCurrencyFrom, uiExchange.exchangeCurrencyTo) }
-    }
-
+    //Load data to ui component and unit observer live data state
     private fun initUI() {
         val gson = Gson()
         uiExchange.loadExchange(
@@ -38,22 +35,6 @@ class ExchangeActivity : ActivityResultObservableActivity() {
             )
         )
         exchangeViewModel.state.observe(::getLifecycle, ::updateUI)
-    }
-
-    private fun updateUI(screenState: ManagerScreenState<ExchangeState>) {
-        when (screenState) {
-            is ManagerScreenState.Loading -> Unit
-            is ManagerScreenState.Render -> processRenderUI(screenState.renderState)
-        }
-    }
-
-    private fun processRenderUI(renderState: ExchangeState) {
-
-        when (renderState) {
-
-            is ExchangeState.Error -> Unit
-            is ExchangeState.Processs -> dialog()
-        }
     }
 
     private fun loadJSONAsset(jsonFile: String): String? {
@@ -74,15 +55,38 @@ class ExchangeActivity : ActivityResultObservableActivity() {
         return json
     }
 
-    private fun dialog() {
+    private fun initListener() {
+        btnProccess.setOnClickListener {
+            exchangeViewModel.proccess(
+                uiExchange.mountExchange,
+                uiExchange.resultReference,
+                uiExchange.exchangeCurrencyFrom,
+                uiExchange.exchangeCurrencyTo
+            )
+        }
+    }
 
+    private fun updateUI(screenState: ManagerScreenState<ExchangeState>) {
+        when (screenState) {
+            is ManagerScreenState.Loading -> Unit
+            is ManagerScreenState.Render -> processRenderUI(screenState.renderState)
+        }
+    }
+
+    private fun processRenderUI(renderState: ExchangeState) {
+        when (renderState) {
+            is ExchangeState.Error -> Unit  //Implement dialog error
+            is ExchangeState.Processs -> dialog()
+        }
+    }
+
+    private fun dialog() {
         val dialog = Dialog(this)
         dialog.setCancelable(true)
         dialog.requestWindowFeature(0)
 
         dialog.setContentView(R.layout.dialog)
         dialog.show()
-
 
         val retryButton = dialog.findViewById(R.id.btnRetryDialog) as Button
         retryButton.setOnClickListener {
@@ -102,10 +106,8 @@ class ExchangeActivity : ActivityResultObservableActivity() {
     }
 
     private fun createViewModel(): ExchangeViewModel {
-
         val exchangeProcess = ExchangeProcessImpl()
         val processUseCase = ProcessUseCase(exchangeProcess)
-
         return ExchangeViewModel(
             processUseCase
         )

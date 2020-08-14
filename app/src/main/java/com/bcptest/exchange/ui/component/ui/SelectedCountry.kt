@@ -10,6 +10,10 @@ import com.bcptest.exchange.ui.component.entity.Country
 import com.bcptest.exchange.ui.component.entity.ExchangeType
 import kotlinx.android.synthetic.main.activity_seleted_country.*
 
+private const val EXCHANGE = "exchange"
+private const val EXCHANGETYPEe = "exchangeType"
+private const val COUNTRY = "country"
+
 class SelectedCountry : AppCompatActivity() {
 
     private var selectedCountryAdapter: SelectedCountryAdapter? = null
@@ -21,21 +25,6 @@ class SelectedCountry : AppCompatActivity() {
 
         initUI()
         initData(intent.extras)
-
-    }
-
-    private fun initData(extras: Bundle?) {
-        if (extras != null) {
-            exchange = extras.getString("exchange") as String
-            val exchangeType: ExchangeType = extras.getSerializable("exchangeType") as ExchangeType
-            if (exchangeType.countries.isNotEmpty())
-                loadData(exchangeType.countries)
-            else {
-                val returnIntent = Intent()
-                setResult(Activity.RESULT_CANCELED, returnIntent)
-                finish()
-            }
-        }
     }
 
     private fun initUI() {
@@ -43,6 +32,21 @@ class SelectedCountry : AppCompatActivity() {
             val returnIntent = Intent()
             setResult(Activity.RESULT_CANCELED, returnIntent)
             finish()
+        }
+    }
+
+    //Load data to recyclerView
+    private fun initData(extras: Bundle?) {
+        if (extras != null) {
+            exchange = extras.getString(EXCHANGE) as String
+            val exchangeType: ExchangeType = extras.getSerializable(EXCHANGETYPEe) as ExchangeType
+            if (exchangeType.countries.isNotEmpty())
+                loadData(exchangeType.countries)
+            else {
+                val returnIntent = Intent()
+                setResult(Activity.RESULT_CANCELED, returnIntent)
+                finish()
+            }
         }
     }
 
@@ -56,8 +60,8 @@ class SelectedCountry : AppCompatActivity() {
         selectedCountryAdapter?.setOnClickItem(object : OnClickItem {
             override fun onClickItem(country: Country) {
                 val returnIntent = Intent()
-                returnIntent.putExtra("country", country)
-                returnIntent.putExtra("exchange", exchange)
+                returnIntent.putExtra(COUNTRY, country)
+                returnIntent.putExtra(EXCHANGE, exchange)
                 setResult(Activity.RESULT_OK, returnIntent)
                 finish()
             }

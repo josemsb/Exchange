@@ -16,14 +16,23 @@ class ExchangeViewModel(private val processUseCase: ProcessUseCase) : ViewModel(
     val state: LiveData<ManagerScreenState<ExchangeState>>
         get() = _state
 
-    //Envía a adicionar un counter
-    fun proccess(  amountExchange: Float,
-                   amountReference: Float,
-                   currencyFrom: String,
-                   currencyTo: String) {
+    //Init proccess backend
+    fun proccess(
+        amountExchange: Float,
+        amountReference: Float,
+        currencyFrom: String,
+        currencyTo: String
+    ) {
         _state.value = ManagerScreenState.Loading
         viewModelScope.launch {
-            processUseCase.run(ProcessUseCase.Params(amountExchange,amountReference,currencyFrom,currencyTo))
+            processUseCase.run(
+                ProcessUseCase.Params(
+                    amountExchange,
+                    amountReference,
+                    currencyFrom,
+                    currencyTo
+                )
+            )
                 .either(::error, ::response)
         }
     }
@@ -36,7 +45,8 @@ class ExchangeViewModel(private val processUseCase: ProcessUseCase) : ViewModel(
     private fun error(failure: Failure) {
         _state.value =
             ManagerScreenState.Render(
-                ExchangeState.Error)
+                ExchangeState.Error
+            )
     }
 
 }

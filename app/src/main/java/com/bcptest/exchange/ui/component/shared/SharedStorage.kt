@@ -23,13 +23,13 @@ class SharedStorage(private val context: Context) {
 
     var currencyFrom: String
         get() = context.getSharedPreferences(STORAGE, Context.MODE_PRIVATE)
-            .getString(CURRENCY_FROM,"")!!
+            .getString(CURRENCY_FROM, "")!!
         set(value) = context.getSharedPreferences(STORAGE, Context.MODE_PRIVATE)
             .edit().putString(CURRENCY_FROM, value).apply()
 
     var currencyTo: String
         get() = context.getSharedPreferences(STORAGE, Context.MODE_PRIVATE)
-            .getString(CURRENCY_TO,"")!!
+            .getString(CURRENCY_TO, "")!!
         set(value) = context.getSharedPreferences(STORAGE, Context.MODE_PRIVATE)
             .edit().putString(CURRENCY_TO, value).apply()
 }

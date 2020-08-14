@@ -11,7 +11,7 @@ class ExchangeProcessImpl : ExchangeProcessRepository {
         currencyFrom: String,
         currencyTo: String
     ): ResultType<Failure, Unit> {
-       //Proceso de validacion de tipo de cambio
+        //Proceso de validacion de tipo de cambio
         return ResultType.Success(Unit)
     }
 

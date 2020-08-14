@@ -8,5 +8,7 @@ data class Country(
     val money: String,
     val valor: Float,
     val selectedSend: Boolean,
-    val selectedGo: Boolean
+    val selectedGo: Boolean,
+    val purchase: Float,
+    val sale: Float
 ): Serializable

@@ -24,7 +24,6 @@ import kotlinx.android.synthetic.main.view_exchange_component.view.*
 
 private const val GET_COUNTRY = 1001
 
-
 class UIExchange constructor(context: Context?, attributes: AttributeSet?) :
     FrameLayout(context!!, attributes), ActivityResultObserver {
 
@@ -32,18 +31,17 @@ class UIExchange constructor(context: Context?, attributes: AttributeSet?) :
     var resultReference: Float = 0.0f
     var exchangeCurrencyFrom: String = ""
     var exchangeCurrencyTo: String = ""
-    private var exchangeType: ExchangeType? = null
-
     val viewModel = UIExchangeViewModel()
+    private var exchangeType: ExchangeType? = null
 
     init {
         inflate(context, R.layout.view_exchange_component, this)
         initListener()
     }
 
+    //Load data (Json or Storage)
     fun loadExchange(exchangeType: ExchangeType) {
         this.exchangeType = exchangeType
-
         if (isNotSaveData())
             loadJson()
         else
@@ -55,7 +53,7 @@ class UIExchange constructor(context: Context?, attributes: AttributeSet?) :
 
         btnGo.setOnClickListener { selectedCountry("to") }
 
-        txtSend.addTextChangedListener(object : TextWatcher {
+        txtAmountFrom.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable) {}
             override fun beforeTextChanged(
                 s: CharSequence, st: Int, ct: Int,
@@ -70,21 +68,21 @@ class UIExchange constructor(context: Context?, attributes: AttributeSet?) :
                 before: Int,
                 count: Int
             ) {
-                if (txtSend.isFocused) {
+                if (txtAmountFrom.isFocused) {
                     if (s.isNotEmpty())
                         viewModel.getExchangeFromaTo(
-                            txtSend.text.toString().toFloat(),
+                            txtAmountFrom.text.toString().toFloat(),
                             exchangeCurrencyFrom,
                             exchangeCurrencyTo,
                             exchangeType!!.countries
                         )
                     else
-                        txtGo.setText("")
+                        txtAmountTo.setText("")
                 }
             }
         })
 
-        txtGo.addTextChangedListener(object : TextWatcher {
+        txtAmountTo.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable) {}
             override fun beforeTextChanged(
                 s: CharSequence, st: Int, ct: Int,
@@ -98,21 +96,51 @@ class UIExchange constructor(context: Context?, attributes: AttributeSet?) :
                 before: Int,
                 count: Int
             ) {
-                if (txtGo.isFocused) {
+                if (txtAmountTo.isFocused) {
                     if (s.isNotEmpty())
                         viewModel.getExchangeToaFrom(
-                            txtGo.text.toString().toFloat(),
+                            txtAmountTo.text.toString().toFloat(),
                             exchangeCurrencyFrom,
                             exchangeCurrencyTo,
                             exchangeType!!.countries
                         )
                     else
-                        txtSend.setText("")
+                        txtAmountFrom.setText("")
                 }
             }
         })
+
+        frlRefresh.setOnClickListener {
+
+            val currencyFrom = exchangeCurrencyTo
+            val currencyTo = exchangeCurrencyFrom
+
+            exchangeCurrencyFrom = currencyFrom
+            exchangeCurrencyTo = currencyTo
+
+            exchangeType!!.countries.forEach {
+                if (it.money == exchangeCurrencyFrom) {
+                    btnSend.text = it.country
+                    txtFrom.text = context.resources.getString(R.string.toSend).plus(it.money)
+                }
+
+                if (it.money == exchangeCurrencyTo) {
+                    txtTo.text = context.resources.getString(R.string.toGo).plus(it.money)
+                    btnGo.text = it.country
+                }
+            }
+
+            if (txtAmountFrom.text.isNotEmpty())
+                viewModel.getExchangeFromaTo(
+                    txtAmountFrom.text.toString().toFloat(),
+                    exchangeCurrencyFrom,
+                    exchangeCurrencyTo,
+                    exchangeType!!.countries
+                )
+        }
     }
 
+    //Show activity from selected country
     private fun selectedCountry(country: String) {
         val intent = Intent(context as Activity, SelectedCountry::class.java)
         intent.putExtra("exchangeType", this.exchangeType)
@@ -120,69 +148,86 @@ class UIExchange constructor(context: Context?, attributes: AttributeSet?) :
         (context as Activity).startActivityForResult(intent, GET_COUNTRY)
     }
 
+    //Init observer live data
     private fun observeLiveData(lifecycleOwner: LifecycleOwner) {
         viewModel.state.observe(lifecycleOwner, Observer {
             when (it) {
-                is ManagerScreenState.Loading -> Unit
+                is ManagerScreenState.Loading -> Unit //implement loading
                 is ManagerScreenState.Render -> processResult(it.renderState)
             }
         })
     }
 
+    //Process state from view model
     private fun processResult(renderState: UIExchangeState) {
         when (renderState) {
-            is UIExchangeState.ExchangeError -> Unit
+            is UIExchangeState.ExchangeError -> Unit  //Implement dialog error
             is UIExchangeState.ExchangeSuccessFrom -> {
-                txtGo.clearFocus()
-                txtGo.setText(renderState.result.toString())
+                txtAmountTo.clearFocus()
+                txtAmountTo.setText(renderState.result.toString())
                 saveData()
-
             }
             is UIExchangeState.ExchangeSuccessTo -> {
-                txtSend.clearFocus()
-                txtSend.setText(renderState.result.toString())
+                txtAmountFrom.clearFocus()
+                txtAmountFrom.setText(renderState.result.toString())
                 saveData()
             }
         }
     }
 
+    //Load data from json
     private fun loadJson() {
         exchangeType!!.countries.forEach {
             if (it.selectedSend) {
+                txtFrom.text = context.resources.getString(R.string.toSend).plus(it.money)
                 btnSend.text = it.country
                 exchangeCurrencyFrom = it.money
+                txtSummary.text =
+                    context.resources.getString(R.string.sale).plus(it.purchase.toString())
+                        .plus(" | venta: ")
+                        .plus(it.sale.toString())
             }
 
             if (it.selectedGo) {
+                txtTo.text = context.resources.getString(R.string.toGo).plus(it.money)
                 btnGo.text = it.country
                 exchangeCurrencyTo = it.money
             }
         }
     }
 
+    //Load data from storage (init UI)
     private fun loadStorage() {
-        txtSend.clearFocus()
-        txtSend.setText(SharedStorage(context).amountFrom.toString())
-        txtGo.clearFocus()
-        txtGo.setText(SharedStorage(context).amountTo.toString())
+        txtAmountFrom.clearFocus()
+        txtAmountFrom.setText(SharedStorage(context).amountFrom.toString())
+        txtAmountTo.clearFocus()
+        txtAmountTo.setText(SharedStorage(context).amountTo.toString())
         exchangeCurrencyFrom = SharedStorage(context).currencyFrom
         exchangeCurrencyTo = SharedStorage(context).currencyTo
 
         exchangeType!!.countries.forEach {
-            if (it.money == exchangeCurrencyFrom)
+            if (it.money == exchangeCurrencyFrom) {
+                txtFrom.text = context.resources.getString(R.string.toSend).plus(it.money)
                 btnSend.text = it.country
+                txtSummary.text =
+                    context.resources.getString(R.string.sale).plus(it.purchase.toString())
+                        .plus(" | venta: ")
+                        .plus(it.sale.toString())
+            }
 
             if (it.money == exchangeCurrencyTo)
-                btnGo.text = it.country
+                txtTo.text = context.resources.getString(R.string.toGo).plus(it.money)
+            btnGo.text = it.country
         }
 
     }
 
+    //Save data
     private fun saveData() {
-        mountExchange = txtSend.text.toString().toFloat()
-        resultReference = txtGo.text.toString().toFloat()
+        mountExchange = txtAmountFrom.text.toString().toFloat()
+        resultReference = txtAmountTo.text.toString().toFloat()
         SharedStorage(context).amountFrom = mountExchange
-        SharedStorage(context).amountTo =resultReference
+        SharedStorage(context).amountTo = resultReference
         SharedStorage(context).currencyFrom = exchangeCurrencyFrom
         SharedStorage(context).currencyTo = exchangeCurrencyTo
     }
@@ -198,23 +243,31 @@ class UIExchange constructor(context: Context?, attributes: AttributeSet?) :
             val type: String = data.getStringExtra("exchange") as String
             country.let {
                 if (type == "from") {
+                    txtFrom.text = context.resources.getString(R.string.toSend).plus(it.money)
                     btnSend.text = it.country
                     exchangeCurrencyFrom = it.money
-                    viewModel.getExchangeFromaTo(
-                        txtSend.text.toString().toFloat(),
-                        exchangeCurrencyFrom,
-                        exchangeCurrencyTo,
-                        exchangeType!!.countries
-                    )
+                    txtSummary.text =
+                        context.resources.getString(R.string.sale).plus(it.purchase.toString())
+                            .plus(" | venta: ")
+                            .plus(it.sale.toString())
+                    if (txtAmountFrom.text.isNotEmpty())
+                        viewModel.getExchangeFromaTo(
+                            txtAmountFrom.text.toString().toFloat(),
+                            exchangeCurrencyFrom,
+                            exchangeCurrencyTo,
+                            exchangeType!!.countries
+                        )
                 } else {
                     btnGo.text = it.country
                     exchangeCurrencyTo = it.money
-                    viewModel.getExchangeToaFrom(
-                        txtGo.text.toString().toFloat(),
-                        exchangeCurrencyFrom,
-                        exchangeCurrencyTo,
-                        exchangeType!!.countries
-                    )
+                    txtTo.text = context.resources.getString(R.string.toGo).plus(it.money)
+                    if (txtAmountFrom.text.isNotEmpty())
+                        viewModel.getExchangeFromaTo(
+                            txtAmountFrom.text.toString().toFloat(),
+                            exchangeCurrencyFrom,
+                            exchangeCurrencyTo,
+                            exchangeType!!.countries
+                        )
 
                 }
             }
