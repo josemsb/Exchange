@@ -14,7 +14,10 @@ import com.bcptest.exchange.ui.component.entity.Country
 import com.bcptest.exchange.ui.component.entity.ExchangeType
 import com.bcptest.exchange.ui.component.repository.ActivityResultObservable
 import com.bcptest.exchange.ui.component.repository.ActivityResultObserver
+import com.bcptest.exchange.ui.component.shared.SharedStorage
 import com.bcptest.exchange.ui.component.ui.SelectedCountry
+import com.bcptest.exchange.ui.component.util.LifecycleOwnerNotFoundException
+import com.bcptest.exchange.ui.component.util.UIExchangeState
 import com.bcptest.exchange.util.ManagerScreenState
 import kotlinx.android.synthetic.main.view_exchange_component.view.*
 
@@ -36,6 +39,15 @@ class UIExchange constructor(context: Context?, attributes: AttributeSet?) :
     init {
         inflate(context, R.layout.view_exchange_component, this)
         initListener()
+    }
+
+    fun loadExchange(exchangeType: ExchangeType) {
+        this.exchangeType = exchangeType
+
+        if (isNotSaveData())
+            loadJson()
+        else
+            loadStorage()
     }
 
     private fun initListener() {
@@ -108,21 +120,6 @@ class UIExchange constructor(context: Context?, attributes: AttributeSet?) :
         (context as Activity).startActivityForResult(intent, GET_COUNTRY)
     }
 
-    fun loadExchange(exchangeType: ExchangeType) {
-        this.exchangeType = exchangeType
-        exchangeType.countries.forEach {
-            if (it.selectedSend) {
-                btnSend.text = it.country
-                exchangeCurrencyFrom = it.money
-            }
-
-            if (it.selectedGo) {
-                btnGo.text = it.country
-                exchangeCurrencyTo = it.money
-            }
-        }
-    }
-
     private fun observeLiveData(lifecycleOwner: LifecycleOwner) {
         viewModel.state.observe(lifecycleOwner, Observer {
             when (it) {
@@ -138,16 +135,60 @@ class UIExchange constructor(context: Context?, attributes: AttributeSet?) :
             is UIExchangeState.ExchangeSuccessFrom -> {
                 txtGo.clearFocus()
                 txtGo.setText(renderState.result.toString())
-                mountExchange = txtSend.text.toString().toFloat()
-                resultReference = txtGo.text.toString().toFloat()
+                saveData()
+
             }
             is UIExchangeState.ExchangeSuccessTo -> {
                 txtSend.clearFocus()
                 txtSend.setText(renderState.result.toString())
-                mountExchange = txtSend.text.toString().toFloat()
-                resultReference = txtGo.text.toString().toFloat()
+                saveData()
             }
         }
+    }
+
+    private fun loadJson() {
+        exchangeType!!.countries.forEach {
+            if (it.selectedSend) {
+                btnSend.text = it.country
+                exchangeCurrencyFrom = it.money
+            }
+
+            if (it.selectedGo) {
+                btnGo.text = it.country
+                exchangeCurrencyTo = it.money
+            }
+        }
+    }
+
+    private fun loadStorage() {
+        txtSend.clearFocus()
+        txtSend.setText(SharedStorage(context).amountFrom.toString())
+        txtGo.clearFocus()
+        txtGo.setText(SharedStorage(context).amountTo.toString())
+        exchangeCurrencyFrom = SharedStorage(context).currencyFrom
+        exchangeCurrencyTo = SharedStorage(context).currencyTo
+
+        exchangeType!!.countries.forEach {
+            if (it.money == exchangeCurrencyFrom)
+                btnSend.text = it.country
+
+            if (it.money == exchangeCurrencyTo)
+                btnGo.text = it.country
+        }
+
+    }
+
+    private fun saveData() {
+        mountExchange = txtSend.text.toString().toFloat()
+        resultReference = txtGo.text.toString().toFloat()
+        SharedStorage(context).amountFrom = mountExchange
+        SharedStorage(context).amountTo =resultReference
+        SharedStorage(context).currencyFrom = exchangeCurrencyFrom
+        SharedStorage(context).currencyTo = exchangeCurrencyTo
+    }
+
+    private fun isNotSaveData(): Boolean {
+        return SharedStorage(context).currencyFrom == "" && SharedStorage(context).currencyTo == ""
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

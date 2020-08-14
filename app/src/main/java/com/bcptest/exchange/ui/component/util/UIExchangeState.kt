@@ -1,4 +1,4 @@
-package com.bcptest.exchange.ui.component
+package com.bcptest.exchange.ui.component.util
 
 sealed class UIExchangeState {
     class ExchangeSuccessFrom(val result: Float): UIExchangeState()

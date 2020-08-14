@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bcptest.exchange.ui.component.entity.Country
+import com.bcptest.exchange.ui.component.util.UIExchangeState
 import com.bcptest.exchange.util.ManagerScreenState
 import kotlinx.coroutines.launch
 
@@ -31,7 +32,7 @@ class UIExchangeViewModel() : ViewModel() {
                 countries.forEach {
                     if (it.money == exchangeCurrencyFrom) {
                         mountPivot = it.valor
-                        newMounConvertPivot = mount *(1 / mountPivot)
+                        newMounConvertPivot = mount * (1 / mountPivot)
                     }
 
                 }
@@ -73,7 +74,7 @@ class UIExchangeViewModel() : ViewModel() {
                 countries.forEach {
                     if (it.money == exchangeCurrencyTo) {
                         mountPivot = it.valor
-                        newMounConvertPivot = mount *(1 / mountPivot)
+                        newMounConvertPivot = mount * (1 / mountPivot)
                     }
 
                 }

@@ -2,7 +2,7 @@ package com.bcptest.exchange.ui.presenter.exchange
 
 import android.os.Bundle
 import com.bcptest.exchange.R
-import com.bcptest.exchange.ui.component.ActivityResultObservableActivity
+import com.bcptest.exchange.ui.component.util.ActivityResultObservableActivity
 import com.bcptest.exchange.ui.component.entity.ExchangeType
 import com.google.gson.Gson
 import kotlinx.android.synthetic.main.activity_exchange.*

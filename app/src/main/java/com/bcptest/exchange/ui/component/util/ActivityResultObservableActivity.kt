@@ -1,4 +1,4 @@
-package com.bcptest.exchange.ui.component
+package com.bcptest.exchange.ui.component.util
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
