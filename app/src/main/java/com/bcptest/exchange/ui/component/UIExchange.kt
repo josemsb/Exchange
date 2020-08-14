@@ -221,9 +221,12 @@ class UIExchange constructor(context: Context?, attributes: AttributeSet?) :
                         .plus(it.sale.toString())
             }
 
-            if (it.money == exchangeCurrencyTo)
+            if (it.money == exchangeCurrencyTo){
                 txtTo.text = context.resources.getString(R.string.toGo).plus(it.money)
-            btnGo.text = it.country
+                btnGo.text = it.country
+            }
+
+
         }
 
     }
