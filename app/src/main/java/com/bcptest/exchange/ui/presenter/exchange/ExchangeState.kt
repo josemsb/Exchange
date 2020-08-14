@@ -1,4 +1,6 @@
 package com.bcptest.exchange.ui.presenter.exchange
 
-class ExchangeState {
+sealed class ExchangeState {
+    object Processs: ExchangeState()
+    object Error: ExchangeState()
 }

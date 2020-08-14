@@ -9,7 +9,7 @@ import com.bcptest.exchange.ui.component.util.UIExchangeState
 import com.bcptest.exchange.util.ManagerScreenState
 import kotlinx.coroutines.launch
 
-class UIExchangeViewModel() : ViewModel() {
+class UIExchangeViewModel : ViewModel() {
 
     private var _state: MutableLiveData<ManagerScreenState<UIExchangeState>> = MutableLiveData()
     val state: LiveData<ManagerScreenState<UIExchangeState>>

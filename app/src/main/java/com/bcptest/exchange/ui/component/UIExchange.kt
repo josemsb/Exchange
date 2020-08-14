@@ -234,7 +234,7 @@ class UIExchange constructor(context: Context?, attributes: AttributeSet?) :
         (context as ActivityResultObservable).removeObserver(this)
     }
 
-    fun onLifecycleOwnerAttached(lifecycleOwner: LifecycleOwner) {
+    private fun onLifecycleOwnerAttached(lifecycleOwner: LifecycleOwner) {
         observeLiveData(lifecycleOwner)
     }
 

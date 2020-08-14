@@ -21,4 +21,6 @@ abstract class ActivityResultObservableActivity : AppCompatActivity(), ActivityR
         activityObserverList.remove(activityResultObserver)
     }
 
+
+
 }

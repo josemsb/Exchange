@@ -3,15 +3,19 @@
     package="com.bcptest.exchange">
 
     <application
-        android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ui.component.ui.SelectedCountry"></activity>
-        <activity android:name=".ui.presenter.exchange.ExchangeActivity"></activity>
-        <activity android:name=".ui.presenter.splash.SplashActivity"
+        <activity
+            android:name=".ui.component.ui.SelectedCountry"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.presenter.exchange.ExchangeActivity"
+            android:screenOrientation="behind" />
+        <activity
+            android:name=".ui.presenter.splash.SplashActivity"
             android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

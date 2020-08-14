@@ -7,4 +7,10 @@
     <string name="go">Tu recibes</string>
     <string name="dolares">Dolares</string>
     <string name="go_operation">Empieza tu operacion</string>
+    <string name="go_process">EMPEZAR</string>
+    <string name="cancel">CANCELAR</string>
+    <string name="message_proccess01">Operacion validada</string>
+    <string name="message_process02">Confirma si deseas continuar la operacion</string>
+    <string name="country">Pais</string>
+    <string name="summary">1 SOL = 1.00 EUR</string>
 </resources>
