@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Exchange</string>
+    <string name="contentDescription">Content Description</string>
+    <string name="cero">0</string>
+    <string name="send">Tu envias</string>
+    <string name="soles">Soles</string>
+    <string name="go">Tu recibes</string>
+    <string name="dolares">Dolares</string>
+    <string name="go_operation">Empieza tu operacion</string>
+</resources>

@@ -1,0 +1,37 @@
+{
+  "countries": [
+    {
+      "country": "Peru",
+      "image": "pe",
+      "money": "SOL",
+      "valor": 1,
+      "selectedSend": true,
+      "selectedGo": false
+    },
+    {
+      "country": "EEUU",
+      "image": "usa",
+      "money": "USD",
+      "valor": 0.28,
+      "selectedSend": false,
+      "selectedGo": true
+    },
+    {
+      "country": "Japan",
+      "image": "ja",
+      "money": "JPY",
+      "valor": 29.94,
+      "selectedSend": false,
+      "selectedGo": false
+    }
+  ,
+    {
+      "country": "Colombia",
+      "image": "co",
+      "money": "COP",
+      "valor": 1053.24,
+      "selectedSend": false,
+      "selectedGo": false
+    }
+  ]
+}
